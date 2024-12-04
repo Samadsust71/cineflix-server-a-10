@@ -25,8 +25,14 @@ async function run() {
   try {
     // connect to mongodb
     await client.connect();
-    const coffeeCollection = client.db("moviesDB").collection("movies");
-
+    const movieCollection = client.db("moviesDB").collection("movies");
+    
+    // create
+    app.post("/movies", async (req, res) => {
+      const movie = req.body;
+      const result = await movieCollection.insertOne(movie);
+      res.send(result);
+    });
     
 
     // Send a ping to confirm a successful connection
