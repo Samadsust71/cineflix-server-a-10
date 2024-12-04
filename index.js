@@ -39,6 +39,23 @@ async function run() {
       const result = await movieCollection.find().toArray()
       res.send(result);
     });
+
+    app.get("/movies/:id", async(req,res)=>{
+
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)};
+      const result = await movieCollection.findOne(query);
+      res.send(result)
+
+  })
+
+  // delete
+  app.delete("/movies/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await movieCollection.deleteOne(query);
+    res.send(result);
+  });
     
 
     // Send a ping to confirm a successful connection
