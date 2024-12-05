@@ -66,6 +66,39 @@ async function run() {
       res.send(result)
 
   })
+    app.get("/movie", async(req,res)=>{
+
+      const {search} = req.query
+      let options ={}
+      if (search) {
+        options = {
+          movieTitle : {$regex : search , $options : "i"}}
+      }
+      const result = await movieCollection.find(options).toArray();
+      res.send(result)
+
+  })
+
+   // update
+   app.put("/movie/:id", async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: new ObjectId(id) };
+    const options = { upsert: true };
+    const updateDoc = req.body
+    const updatedMovie = {
+      $set: {
+        movieTitle:updateDoc?.movieTitle,
+        poster:updateDoc?.poster,
+        genres:updateDoc?.genres,
+        duration:updateDoc?.duration,
+        releaseYear:updateDoc?.releaseYear,
+        summary:updateDoc?.summary,
+        ratings:updateDoc?.ratings,
+      },
+    };
+    const result = await movieCollection.updateOne(filter, updatedMovie,options);
+    res.send(result)
+  });
 
   // delete
   app.delete("/movies/:id", async (req, res) => {
