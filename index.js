@@ -35,8 +35,8 @@ async function run() {
       res.send(result);
     });
     app.post("/favourite_movies", async (req, res) => {
-      const movie = req.body;
-      const result = await favouriteMovieCollection.insertOne(movie);
+      const favouriteMovie = req.body;
+      const result = await favouriteMovieCollection.insertOne(favouriteMovie);
       res.send(result);
     });
 
@@ -58,12 +58,26 @@ async function run() {
       res.send(result)
 
   })
+    app.get("/favourite_movies/:email", async(req,res)=>{
+
+      const email = req.params.email
+      const query = { email};
+      const result = await favouriteMovieCollection.find(query).toArray();
+      res.send(result)
+
+  })
 
   // delete
   app.delete("/movies/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
     const result = await movieCollection.deleteOne(query);
+    res.send(result);
+  });
+  app.delete("/favourite_movies/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await favouriteMovieCollection.deleteOne(query);
     res.send(result);
   });
     
