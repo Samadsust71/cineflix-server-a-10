@@ -26,6 +26,7 @@ async function run() {
     // connect to mongodb
     await client.connect();
     const movieCollection = client.db("moviesDB").collection("movies");
+    const favouriteMovieCollection = client.db("moviesDB").collection("favouriteMovie");
     
     // create data
     app.post("/movies", async (req, res) => {
@@ -33,10 +34,19 @@ async function run() {
       const result = await movieCollection.insertOne(movie);
       res.send(result);
     });
+    app.post("/favourite_movies", async (req, res) => {
+      const movie = req.body;
+      const result = await favouriteMovieCollection.insertOne(movie);
+      res.send(result);
+    });
 
     // read data
     app.get("/movies", async (req, res) => {
       const result = await movieCollection.find().toArray()
+      res.send(result);
+    });
+    app.get("/movies-sorted", async (req, res) => {
+      const result = await movieCollection.find().sort({ratings : -1}).limit(6).toArray()
       res.send(result);
     });
 
