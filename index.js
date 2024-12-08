@@ -46,7 +46,14 @@ async function run() {
 
     // read data
     app.get("/movies", async (req, res) => {
-      const result = await movieCollection.find().toArray();
+      const { search } = req.query;
+      let options = {};
+      if (search) {
+        options = {
+          movieTitle: { $regex: search, $options: "i" }
+        };
+      }
+      const result = await movieCollection.find(options).toArray();
       res.send(result);
     });
     app.get("/movies-sorted", async (req, res) => {
@@ -70,17 +77,7 @@ async function run() {
       const result = await favouriteMovieCollection.find(query).toArray();
       res.send(result);
     });
-    app.get("/movie", async (req, res) => {
-      const { search } = req.query;
-      let options = {};
-      if (search) {
-        options = {
-          movieTitle: { $regex: search, $options: "i" }
-        };
-      }
-      const result = await movieCollection.find(options).toArray();
-      res.send(result);
-    });
+    
 
     // update
     app.put("/movie/:id", async (req, res) => {
