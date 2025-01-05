@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(cors(
   {
-    origin: "https://cine-verse-b249e.web.app"
+    origin: ["https://cine-verse-b249e.web.app","http://localhost:5173"]
    }
 ));
 app.use(express.json());
@@ -60,7 +60,7 @@ async function run() {
       const result = await movieCollection
         .find()
         .sort({ ratings: -1 })
-        .limit(6)
+        .limit(8)
         .toArray();
       res.send(result);
     });
